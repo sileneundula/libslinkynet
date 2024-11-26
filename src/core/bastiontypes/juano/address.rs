@@ -1,4 +1,4 @@
-pub const JUANOINTERNETADDRESSPREFIX: &str = "JUAN";
+pub const JUANOINTERNETADDRESSPREFIX: &str = "JUANO";
 pub const JUANOINTERNETADDRESSPREFIXProtocol: &str = "://";
 
 pub struct JuanoInternetAddress(String);

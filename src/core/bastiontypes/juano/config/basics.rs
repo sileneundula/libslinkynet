@@ -17,7 +17,7 @@
 /// - JuanoScript
 pub struct JuanoNodeType(u16);
 
-pub struct JuanoNodeContainer<T>(T);
+pub struct JuanoNodeConfig<T>(T);
 
 pub struct JuanoNodeBlockRepoPivot(String);
 
