@@ -22,3 +22,6 @@ hex = "0.4.3"
 
 # Errors
 thiserror = "2.0.0"
+
+# Cryptograhpy
+libsumatracrypt-rs = "0.5.0"

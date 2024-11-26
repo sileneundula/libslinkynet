@@ -1,0 +1,1 @@
+pub use libsumatracrypt_rs::digest::SumatraShake256;

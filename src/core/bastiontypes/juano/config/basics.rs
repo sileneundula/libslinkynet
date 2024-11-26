@@ -20,13 +20,16 @@
 pub struct JuanoNodeType(u16);
 
 pub enum JuanoNodeTypes {
-    Relay,
-    Bridge,
-    Database,
-    Gateway,
-    StrgUnit,
+    Relay(u8),
+    Bridge(u16),
+    Database(u8),
     
+    Gateway(u8),
+    StrgUnit(u8),
+    
+    // Advanced
     DCVM,
+    JuanoServe,
 }
 
 pub struct JuanoNodeConfig<T>(T);
