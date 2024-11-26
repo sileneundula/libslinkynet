@@ -4,8 +4,8 @@
 /// 
 /// 
 /// ### Basic
-/// - Relay
-/// - Bridge
+/// - Relay (0x00)
+/// - Bridge (0x01)
 /// - Database (can be open or private, uses connector)
 /// - Gateway
 /// - DecentralizedConsensusVirtualMachines (DCVM)
@@ -15,6 +15,7 @@
 /// - JuanoRepos
 /// - JuanoLogicalUnit (Logic Unit)
 /// - JuanoScript
+/// - JuanoDatabase
 pub struct JuanoNodeType(u16);
 
 pub struct JuanoNodeConfig<T>(T);
