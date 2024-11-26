@@ -9,6 +9,7 @@
 /// - Database (can be open or private, uses connector)
 /// - Gateway
 /// - DecentralizedConsensusVirtualMachines (DCVM)
+/// - StorageUnit
 /// 
 /// ### Advanced
 /// - JuanoServe (can be attached to borneo)
@@ -17,6 +18,16 @@
 /// - JuanoScript
 /// - JuanoDatabase
 pub struct JuanoNodeType(u16);
+
+pub enum JuanoNodeTypes {
+    Relay,
+    Bridge,
+    Database,
+    Gateway,
+    StrgUnit,
+    
+    DCVM,
+}
 
 pub struct JuanoNodeConfig<T>(T);
 
