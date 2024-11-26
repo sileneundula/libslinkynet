@@ -19,3 +19,6 @@ serde_yaml = "0.9.33"
 # Encoding
 base32 = "0.5.0"
 hex = "0.4.3"
+
+# Errors
+thiserror = "2.0.0"
