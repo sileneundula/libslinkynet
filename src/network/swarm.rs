@@ -1,4 +1,6 @@
 use libp2p::{PeerId, Swarm};
+use crate::network::transport::*;
+use crate::network::network::SlinkyL1Behaviour;
 
 pub fn create_swarm(transport: libp2p::core::transport::Boxed<(PeerId, libp2p::core::muxing::StreamMuxerBox)>) -> Swarm<()> {
     // Generate a random PeerId
@@ -8,6 +10,6 @@ pub fn create_swarm(transport: libp2p::core::transport::Boxed<(PeerId, libp2p::c
     println!("Local peer id: {:?}", local_peer_id);
 
     // Create a basic Swarm
-    let swarm = Swarm::new(transport, (), local_peer_id);
+    let swarm = Swarm::new(transport, SlinkyL1Behaviour, local_peer_id);
     return swarm
 }
