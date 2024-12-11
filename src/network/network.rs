@@ -1,8 +1,9 @@
 use libp2p::relay;
 use libp2p::*;
 use libp2p::swarm::*;
-
-use crate::network::peer_discovery::kad::SlinkyKAD;
+use libp2p::kad::store::MemoryStore;
+use libp2p::identity;
+use libp2p::identity::PeerId;
 
 /// # SlinkyL1Behaviour
 /// 
@@ -20,20 +21,28 @@ use crate::network::peer_discovery::kad::SlinkyKAD;
 /// ## Advanced
 /// 
 /// 1. SlinkyBridge
+/// 2. 
 #[derive(NetworkBehaviour)]
 pub struct SlinkyL1Behaviour {
+    // Basics
     relay: relay::Behaviour,
     ping: ping::Behaviour,
-    discovery: kad::Behaviour<MemoryStore>, // KAD-CORE 
+    discovery: kad::Behaviour<MemoryStore>,
     identify: identify::Behaviour,
-    // Other behaviours like discovery
 }
 
 impl SlinkyL1Behaviour {
-    fn new() -> Self {
+    fn new(kp: identity::Keypair) -> Self {
+        
+        let pk = kp.public();
+        let id = PeerId::from(pk);
+
+        
         Self {
-            relay: relay::Behaviour::new(),
-            ping: ping::Behaviour::new(),
+            relay: relay::Behaviour::new(&id,relay::Config::default()),
+            ping: ping::Behaviour::new(ping::Config::default()),
+            discovery: kad::Behaviour::new(&id,kad::store::MemoryStore::new(&id)),
+            identify: identify::Behaviour::new(identify::Config::new(String::from("SlinkyL1Alpha"),kp.public())),
         }
     }
 }
