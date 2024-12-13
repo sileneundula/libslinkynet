@@ -29,10 +29,21 @@ pub struct SlinkyL1Behaviour {
     ping: ping::Behaviour,
     discovery: kad::Behaviour<MemoryStore>,
     identify: identify::Behaviour,
+
+    // # SlinkyL1
+    // Lists the core functionalities
+    
+
+    // Serve
+    servestatic: 
+    
+    // Repositories
+    sta
+
 }
 
 impl SlinkyL1Behaviour {
-    fn new(kp: identity::Keypair) -> Self {
+    pub fn new(kp: identity::Keypair) -> Self {
         
         let pk = kp.public();
         let id = PeerId::from(pk);

@@ -1,1 +1,1 @@
-pub mod bastiontypes;
+pub mod bastiontypes

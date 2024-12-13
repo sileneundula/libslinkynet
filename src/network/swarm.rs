@@ -10,6 +10,6 @@ pub fn create_swarm(transport: libp2p::core::transport::Boxed<(PeerId, libp2p::c
     println!("Local peer id: {:?}", local_peer_id);
 
     // Create a basic Swarm
-    let swarm = Swarm::new(transport, SlinkyL1Behaviour, local_peer_id);
+    let swarm = Swarm::new(transport, SlinkyL1Behaviour::new(local_key), local_peer_id);
     return swarm
 }
