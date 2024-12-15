@@ -1,10 +1,16 @@
+use crate::network::network::SlinkyL1Behaviour;
+use crate::network::swarm::*;
+use crate::network::transport::SlinkyConnectionTCP;
+
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
+    
+    
     // Initialize the transport
-    let transport = build_transport()?;
+    let transport = SlinkyConnectionTCP::new(keypair);
 
     // Create the swarm
-    let mut swarm = create_swarm(transport);
+    let mut swarm = create_swarm(transport)
 
     // Listen on a multiaddress
     let listen_addr = "/ip4/0.0.0.0/tcp/0".parse()?;

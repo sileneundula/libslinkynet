@@ -5,6 +5,27 @@ pub struct SlinkyConnection(core::transport::Boxed<(PeerId,core::muxing::StreamM
 pub struct SlinkyConnectionTCP(core::transport::Boxed<(PeerId, core::muxing::StreamMuxerBox)>);
 pub struct SlinkyConnectionWSS(core::transport::Boxed<(PeerId,core::muxing::StreamMuxerBox)>);
 
+impl SlinkyConnectionTCP {
+    pub fn new(keypair: identity::Keypair) -> Self {
+        let x: SlinkyConnectionTCP = Self(create_secure_transport_tcp(keypair));
+    }
+    pub fn generate(alg: SlinkyAlgorithm) -> Self {
+        let keypair = match alg {
+            SlinkyAlgorithm::Curve25519 => identity::Keypair::generate_ed25519(),
+            SlinkyAlgorithm::SECP256k1 => identity::Keypair::generate_secp256k1(),
+            SlinkyAlgorithm::ECDSA => identity::Keypair::generate_ecdsa(),
+        };
+        return Self(create_secure_transport_tcp(keypair))
+    }
+    pub fn generate_ed25519() -> Self {
+        let keypair = identity::Keypair::generate_ed25519();
+        return Self(create_secure_transport_tcp(keypair))
+    }
+    pub fn get_transport(&self) -> core::transport::Boxed<(PeerId, core::muxing::StreamMuxerBox)> {
+        return self.0
+    }
+}
+
 impl SlinkyConnectionWSS {
     pub fn new(keypair: identity::Keypair) -> Self {
         let x = Self(create_secure_transport_wss(keypair));
@@ -14,11 +35,23 @@ impl SlinkyConnectionWSS {
             SlinkyAlgorithm::Curve25519 => identity::Keypair::generate_ed25519(),
             SlinkyAlgorithm::SECP256k1 => identity::Keypair::generate_secp256k1(),
             SlinkyAlgorithm::ECDSA => identity::Keypair::generate_ecdsa(),
-
         };
+
+        Self(create_secure_transport_wss(keypair))
+    }
+    pub fn generate_ed25519() -> Self {
+        let keypair = identity::Keypair::generate_ed25519();
+        return Self(create_secure_transport_wss(keypair))
     }
 }
 
+/// # SlinkyAlgorithm
+/// 
+/// Includes:
+/// 
+/// - Secp256k1
+/// - Ed25519
+/// - ECDSA
 pub enum SlinkyAlgorithm {
     SECP256k1,
     Curve25519,

@@ -6,3 +6,6 @@ pub mod encoding;
 
 /// Includes serialization
 pub mod serde;
+
+/// Includes Merkle Tree
+pub mod data_structures;

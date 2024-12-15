@@ -29,3 +29,6 @@ libsumatracrypt-rs = "0.5.0"
 # Logger
 pretty_env_logger = "0.5.0"
 
+# Time
+chrono = "0.4.39"
+
