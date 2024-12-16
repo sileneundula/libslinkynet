@@ -8,6 +8,9 @@ use libp2p::PeerId;
 use libp2p::Swarm;
 use pretty_env_logger;
 use log::*;
+use tokio::io::AsyncBufReadExt;
+
+use crate::network::events::EventType;
 
 use crate::network::network::SlinkyL1Topic;
 use crate::network::network::SlinkyL1Topics;
@@ -37,22 +40,32 @@ pub async fn main() -> Result<(), Box<dyn std::error::Error>> {
     
     // Behaviour For Floodsub Using Topic
     swarm.behaviour_mut().floodsub.subscribe(SlinkyL1Topic::new(SlinkyL1Topics::SlinkyL1Alpha).get_topic());
-    
+
 
 
     println!("Listening");
+
     // Listen on a multiaddress
     let listen_addr = "/ip4/0.0.0.0/tcp/0".parse()?;
+
+
+    let mut stdin = tokio::io::BufReader::new(tokio::io::stdin()).lines();
+
+
     Swarm::listen_on(&mut swarm, listen_addr)?;
 
     // Event loop
     loop {
-        tokio::select! {
-            event = swarm.next() => {
-                if let Some(event) = event {
+        let slinkyevents = {
+            tokio::select! {
+                line = stdin.next_line() => Some(EventType::Input(line.expect("can get line").expect("can read line from stdin"))),
+            
+                // Events
+                event = swarm.next() => {
                     println!("Swarm event: {:?}", event);
+                    None
                 }
             }
-        }
+        };
     }
 }

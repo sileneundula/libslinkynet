@@ -19,3 +19,6 @@ pub mod transport;
 
 /// SlinkyL1 Metadata
 pub mod metadata;
+
+/// SlinkyL1 Events
+pub mod events;
