@@ -9,3 +9,6 @@ pub mod internals;
 
 /// Errors for Slinky
 pub mod errors;
+
+/// SlinkyL1 Initialization
+pub mod app;

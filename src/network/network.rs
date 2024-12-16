@@ -4,6 +4,25 @@ use libp2p::swarm::*;
 use libp2p::kad::store::MemoryStore;
 use libp2p::identity;
 use libp2p::identity::PeerId;
+use libp2p::floodsub::*;
+
+pub struct SlinkyL1Topic(floodsub::Topic);
+
+pub enum SlinkyL1Topics {
+    SlinkyL1Alpha,
+}
+
+impl SlinkyL1Topic {
+    pub fn new(s: SlinkyL1Topics) -> Self {
+        let topic = match s {
+            SlinkyL1Topics::SlinkyL1Alpha => Topic::new("SLINKYL1ALPHA")
+        };
+        return Self(topic)
+    }
+    pub fn get_topic(self) -> Topic {
+        return self.0
+    }
+}
 
 /// # SlinkyL1Behaviour
 /// 
@@ -25,10 +44,12 @@ use libp2p::identity::PeerId;
 #[derive(NetworkBehaviour)]
 pub struct SlinkyL1Behaviour {
     // Basics
-    relay: relay::Behaviour,
-    ping: ping::Behaviour,
-    discovery: kad::Behaviour<MemoryStore>,
-    identify: identify::Behaviour,
+    pub relay: relay::Behaviour,
+    pub ping: ping::Behaviour,
+    pub discovery: kad::Behaviour<MemoryStore>,
+    pub identify: identify::Behaviour,
+
+    pub floodsub: floodsub::Floodsub,
     // # SlinkyL1
     // Lists the core functionalities
     
@@ -51,6 +72,8 @@ impl SlinkyL1Behaviour {
             ping: ping::Behaviour::new(ping::Config::default()),
             discovery: kad::Behaviour::new(id,kad::store::MemoryStore::new(id)),
             identify: identify::Behaviour::new(identify::Config::new(String::from("SlinkyL1Alpha"),kp.public())),
+            
+            floodsub: Floodsub::new(id),
         }
     }
 }

@@ -6,20 +6,41 @@ use futures::StreamExt;
 use libp2p::identity;
 use libp2p::PeerId;
 use libp2p::Swarm;
+use pretty_env_logger;
+use log::*;
+
+use crate::network::network::SlinkyL1Topic;
+use crate::network::network::SlinkyL1Topics;
 
 #[tokio::main]
-async fn main() -> Result<(), Box<dyn std::error::Error>> {
-    
+pub async fn main() -> Result<(), Box<dyn std::error::Error>> {
+    pretty_env_logger::init();
 
+
+    println!("Initializing SlinkyL1");
+    println!("TOPIC: {:?}",SlinkyL1Topic::new(SlinkyL1Topics::SlinkyL1Alpha).get_topic());
+    println!("");
+    println!("[INFO]Keypair-Algorithm: Ed25519");
 
     let local_key = identity::Keypair::generate_ed25519();
     let peer_id = PeerId::from_public_key(&local_key.public());
 
-    println!("Peer ID: {:?}", peer_id);
+    println!("[INFO]Peer-ID: {}", &peer_id);
 
+    println!("");
+
+    println!("Starting Swarm with SlinkyL1Behaviour...");
     // Create the swarm
     let mut swarm = SlinkyL1Swarm::new(local_key);
 
+    println!("Subscribing to Topic using FloodSub");
+    
+    // Behaviour For Floodsub Using Topic
+    swarm.behaviour_mut().floodsub.subscribe(SlinkyL1Topic::new(SlinkyL1Topics::SlinkyL1Alpha).get_topic());
+    
+
+
+    println!("Listening");
     // Listen on a multiaddress
     let listen_addr = "/ip4/0.0.0.0/tcp/0".parse()?;
     Swarm::listen_on(&mut swarm, listen_addr)?;

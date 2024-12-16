@@ -2953,6 +2953,7 @@ dependencies = [
  "hex",
  "libp2p",
  "libsumatracrypt-rs",
+ "log",
  "pretty_env_logger",
  "serde",
  "serde_json",
