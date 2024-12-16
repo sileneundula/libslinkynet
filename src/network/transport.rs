@@ -8,6 +8,7 @@ pub struct SlinkyConnectionWSS(core::transport::Boxed<(PeerId,core::muxing::Stre
 impl SlinkyConnectionTCP {
     pub fn new(keypair: identity::Keypair) -> Self {
         let x: SlinkyConnectionTCP = Self(create_secure_transport_tcp(keypair));
+        return x
     }
     pub fn generate(alg: SlinkyAlgorithm) -> Self {
         let keypair = match alg {
@@ -29,6 +30,7 @@ impl SlinkyConnectionTCP {
 impl SlinkyConnectionWSS {
     pub fn new(keypair: identity::Keypair) -> Self {
         let x = Self(create_secure_transport_wss(keypair));
+        return x
     }
     pub fn generate(alg: SlinkyAlgorithm) -> Self {
         let keypair = match alg {

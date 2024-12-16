@@ -3,8 +3,8 @@ use hex::*;
 pub struct SlinkyHexEncoding;
 
 impl SlinkyHexEncoding {
-    pub fn encode<T: AsRef<[u8]>>(bytes: T) -> str {
-        hex::encode_upper(bytes.as_ref()).as_str()
+    pub fn encode<T: AsRef<[u8]>>(bytes: T) -> String {
+        hex::encode_upper(bytes.as_ref())
     }
     pub fn decode<T: AsRef<str>>(s: T) -> Result<Vec<u8>,FromHexError> {
         let decoded_hex: Result<Vec<u8>, FromHexError> = hex::decode(s.as_ref());
@@ -13,7 +13,7 @@ impl SlinkyHexEncoding {
             return Ok(decoded_hex.unwrap())
         }
         else {
-            return Err(decoded_hex.err())
+            return Err(decoded_hex.unwrap_err())
         }
 
     }

@@ -2,7 +2,7 @@ use thiserror::Error;
 
 #[derive(Error, Debug)]
 pub enum SlinkyErrors {
-    #[error("Encoding or Decoding Error Using {} On {}", encoding, context)]
+    #[error("Encoding or Decoding Error Using {:?} On {:?}", encoding, context)]
     EncodingError {
         encoding: EncodingErrorTypes,
         context: SlinkyContext,
@@ -11,6 +11,7 @@ pub enum SlinkyErrors {
     }
 }
 
+#[derive(Debug)]
 
 pub enum EncodingErrorTypes {
     Hex,
@@ -19,9 +20,12 @@ pub enum EncodingErrorTypes {
     Base64,
 }
 
+#[derive(Debug)]
 pub enum SlinkyContext {
     PublicKey,
     SecretKey,
     Signature,
     Digest,
+    
+    Null,
 }

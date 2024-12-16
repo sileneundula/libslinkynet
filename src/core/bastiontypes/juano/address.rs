@@ -5,7 +5,7 @@ pub struct JuanoInternetAddress(String);
 
 impl JuanoInternetAddress {
     pub fn new<T: AsRef<str>>(s: T) -> Self {
-        return s.as_ref().to_string()
+        return Self(s.as_ref().to_string())
     }
     pub fn validate() {
         

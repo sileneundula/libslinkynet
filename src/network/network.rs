@@ -47,9 +47,9 @@ impl SlinkyL1Behaviour {
 
         
         Self {
-            relay: relay::Behaviour::new(&id,relay::Config::default()),
+            relay: relay::Behaviour::new(id,relay::Config::default()),
             ping: ping::Behaviour::new(ping::Config::default()),
-            discovery: kad::Behaviour::new(&id,kad::store::MemoryStore::new(&id)),
+            discovery: kad::Behaviour::new(id,kad::store::MemoryStore::new(id)),
             identify: identify::Behaviour::new(identify::Config::new(String::from("SlinkyL1Alpha"),kp.public())),
         }
     }
