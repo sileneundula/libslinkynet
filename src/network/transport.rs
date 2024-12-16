@@ -22,7 +22,7 @@ impl SlinkyConnectionTCP {
         let keypair = identity::Keypair::generate_ed25519();
         return Self(create_secure_transport_tcp(keypair))
     }
-    pub fn get_transport(&self) -> core::transport::Boxed<(PeerId, core::muxing::StreamMuxerBox)> {
+    pub fn get_transport(self) -> core::transport::Boxed<(PeerId, core::muxing::StreamMuxerBox)> {
         return self.0
     }
 }

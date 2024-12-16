@@ -13,7 +13,7 @@ pub struct SlinkyL1Swarm;
 impl SlinkyL1Swarm {
     pub fn new(keypair: identity::Keypair) -> Swarm<SlinkyL1Behaviour> {
         // Transport TCP
-        let transport = SlinkyConnectionTCP::new(keypair);
+        let transport = SlinkyConnectionTCP::new(keypair.clone());
 
         let pk = keypair.public();
         let peer_id = PeerId::from_public_key(&pk);
