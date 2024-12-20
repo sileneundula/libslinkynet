@@ -20,6 +20,9 @@
 /// 
 
 pub enum Commands {
+    // About
+    version,
+    
     // File System (Sandboxed)
     lsfs,
     cd,
@@ -36,14 +39,22 @@ pub enum Commands {
     lsn, // List Network
     lsp, // List Virtualized Ports (maybe)
     lsi, // List Identities
+    
+    lsprotocols, // List Protocols
 
+    // Package
+    spm, // Slinky Package Manager
+    lsspm, // List Slinky Packages
+
+    // Bridges
+    bridgr, // Bridge Module
 
     // Security
     security, // security panel
     set_secure_level, // Sets Security Level
 
-    // Slinky
-    slinky_get, // slinky-get | Get from slinky
+    // Slinky Network
+    sli_get, // slinky-get | Get from slinky
 
     // Slab
     slab,
