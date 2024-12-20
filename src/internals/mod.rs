@@ -9,3 +9,6 @@ pub mod serde;
 
 /// Includes Merkle Tree
 pub mod data_structures;
+
+/// Includes Time-Related Functions
+pub mod time;
