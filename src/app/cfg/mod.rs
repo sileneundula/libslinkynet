@@ -7,13 +7,6 @@ use crate::internals::filesystem::directories;
 /// Base directory of Slinky files in user files.
 pub struct SlinkyHomeDirectory(path::Path);
 
-pub struct SlinkyDirectoryStructure {
-    home: Path,
-    
-    // C:\Users\Account\.slinky
-    user_slinky: Path,
-}
-
 pub struct SlinkySetup;
 
 impl SlinkySetup {
@@ -26,7 +19,7 @@ impl SlinkySetup {
 
             // .slinky/
             slinky_base.push(".slinky");
-            fs::create_dir(slinky_base);
+            fs::create_dir(slinky_base.as_path());
 
             // .slinky/
                 // keystore
@@ -37,20 +30,22 @@ impl SlinkySetup {
                 // config
                     // manifest
                 // packages
-                // 
+                // identities
 
-            let mut slinky_config = slinky_base;
+            // .slinkydata
+                // identities
+                // workspace
+                    // <hash>
 
+            // slinkyspac3
+                // home
+
+            let mut slinky_config = slinky_base.clone();
             slinky_config.push("config");
 
             // .slinky/config/
             fs::create_dir(slinky_config);
         }
-    }
-    fn init_home() {
-        // homehomehomehomehome
-        if let Some
-
     }
     pub fn uninstall() {
 
