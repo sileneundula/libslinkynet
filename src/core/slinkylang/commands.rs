@@ -19,7 +19,7 @@
 /// - del-key
 /// 
 
-pub enum Commands {
+pub enum SlinkyCommands {
     // About
     version,
     
