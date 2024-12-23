@@ -3,7 +3,9 @@ use crate::network::swarm::*;
 use crate::network::transport::SlinkyConnectionTCP;
 use crate::network::swarm::SlinkyL1Swarm;
 use futures::StreamExt;
+use libp2p::core::transport::ListenerId;
 use libp2p::identity;
+use libp2p::swarm::ListenAddresses;
 use libp2p::PeerId;
 use libp2p::Swarm;
 use pretty_env_logger;
@@ -38,8 +40,10 @@ pub async fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     println!("Subscribing to Topic using FloodSub");
     
+    let behaviour = swarm.behaviour();
+
     // Behaviour For Floodsub Using Topic
-    swarm.behaviour_mut().floodsub.subscribe(SlinkyL1Topic::new(SlinkyL1Topics::SlinkyL1Alpha).get_topic());
+    // swarm.behaviour_mut().floodsub.subscribe(SlinkyL1Topic::new(SlinkyL1Topics::SlinkyL1Alpha).get_topic());
 
 
 
@@ -49,6 +53,7 @@ pub async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let listen_addr = "/ip4/0.0.0.0/tcp/0".parse()?;
 
 
+    // STDIN (Command Interface)
     let mut stdin = tokio::io::BufReader::new(tokio::io::stdin()).lines();
 
 
@@ -56,13 +61,11 @@ pub async fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     // Event loop
     loop {
-        let slinkyevents = {
+        let evt = {
             tokio::select! {
-                line = stdin.next_line() => Some(EventType::Input(line.expect("can get line").expect("can read line from stdin"))),
-            
-                // Events
+                line = stdin.next_line() => Some(EventType::Input(line.expect("can get line").expect("can read line"))),
                 event = swarm.next() => {
-                    println!("Swarm event: {:?}", event);
+                    println!("New Event {:?}",event);
                     None
                 }
             }

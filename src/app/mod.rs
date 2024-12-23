@@ -5,4 +5,4 @@ pub mod cfg;
 pub mod slinkr;
 
 /// SlinkyNetwork
-pub mod slinkynet;
+pub mod network;

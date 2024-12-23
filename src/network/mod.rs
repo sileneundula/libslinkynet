@@ -1,12 +1,8 @@
-
-
-pub mod app;
-
+/// SlinkyL1 Protocols
 pub mod protocols;
-pub mod routing;
-pub mod nodes;
 
-pub mod init;
+/// SlinkyL1 Routing
+pub mod routing;
 
 /// SlinkyL1 Network Behaviour
 pub mod network;
