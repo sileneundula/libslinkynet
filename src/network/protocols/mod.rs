@@ -10,3 +10,6 @@ pub mod yack;
 
 /// # [0x00] SHIBA Protocol
 pub mod shiba;
+
+/// # [0x01] KeyService
+pub mod keyservice;
