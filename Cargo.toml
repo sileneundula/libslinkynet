@@ -24,7 +24,7 @@ hex = "0.4.3"
 thiserror = "2.0.0"
 
 # Cryptograhpy
-libsumatracrypt-rs = "0.6.0"
+libsumatracrypt-rs = "0.6.1"
 
 # Logger
 log = "0.4"
@@ -45,3 +45,6 @@ ring = "0.17.8"
 
 # RAFT
 openraft = "0.9.17"
+
+# Zeroize
+zeroize = { version= "1.8.1", features=["derive"]}

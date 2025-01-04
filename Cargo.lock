@@ -3348,13 +3348,14 @@ dependencies = [
  "serde_yaml",
  "thiserror 2.0.8",
  "tokio",
+ "zeroize",
 ]
 
 [[package]]
 name = "libsumatracrypt-rs"
-version = "0.6.0"
+version = "0.6.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "2d1beffb50d71da6079c9ed5c092d2143817d70f464ad17f0dd672821c6e0816"
+checksum = "11fa2a405393d3d432b24b08b8cae2b2903e9b41a4355e9c49038654131ea03f"
 dependencies = [
  "base32",
  "bip39",
