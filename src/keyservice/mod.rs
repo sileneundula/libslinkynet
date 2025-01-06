@@ -185,4 +185,10 @@ impl KeyPair {
             alg: ka,
         }
     }
+    pub fn export_keypair_yaml(&self) -> String {
+        serde_yaml::to_string(&self).expect("Failed To Serialize To YAML")
+    }
+    pub fn import_keypair_yaml<T: AsRef<str>>(keypair_yaml: T) -> Self {
+        serde_yaml::from_str(keypair_yaml.as_ref()).expect("Failed To Import Keypair")
+    }
 }
