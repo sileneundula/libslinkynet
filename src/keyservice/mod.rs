@@ -1,6 +1,8 @@
-use libsumatracrypt_rs::{pq::signatures::{dilithium::SumatraDilithium3, falcon::SumatraFalcon1024}, signatures::{ed25519::{ED25519SecretKey, SumatraED25519}, schnorr::{SchnorrSecretKey, SumatraSchnorrAPI}}};
+use libsumatracrypt_rs::{pq::signatures::{dilithium::SumatraDilithium3, falcon::SumatraFalcon1024}, signatures::{ed25519::{ED25519SecretKey, SumatraED25519, ED25519PublicKey}, schnorr::{SchnorrSecretKey, SumatraSchnorrAPI}}};
 use crate::internals::crypto::signature::schnorr::*;
 use crate::internals::crypto::signature::pq::falcon1024::*;
+use crate::internals::encoding::bs32::SlinkyBase32z;
+use base58::*;
 
 
 use crate::internals::serde::{Serialize,Deserialize};
@@ -17,7 +19,10 @@ use zeroize::{Zeroize,ZeroizeOnDrop};
 /// 
 /// Keypairs are encoded in hexadecimal and signatures are encoded in base58.
 /// 
+/// # Format
 /// 
+/// - All Public Keys and Secret Keys are encoded in upper-hexadecimal
+/// - A Keypair is serialized to YAML 
 
 
 /// Node Implementation of KeyService
@@ -32,13 +37,18 @@ pub struct KeyPair {
 }
 
 /// PublicKey
+#[derive(Clone,Debug,Serialize,Deserialize,Zeroize,ZeroizeOnDrop)]
 pub struct PubKey(String,KeyAlgorithms);
 
 /// SecretKey
 pub struct SecKey(String,KeyAlgorithms);
 
 /// Signature
-pub struct Signature(String,KeyAlgorithms);
+#[derive(Clone,Debug,Serialize,Deserialize,Zeroize,ZeroizeOnDrop)]
+pub struct Signature {
+    sig: String,
+    alg: KeyAlgorithms,
+}
 
 /// KeyAlgorithm
 pub struct KeyAlgorithm;
@@ -63,12 +73,14 @@ impl KeyPair {
             KeyAlgorithms::ED25519 => 0u8,
             KeyAlgorithms::Schnorr => 1u8,
             KeyAlgorithms::PQFALCON => 8u8,
+            KeyAlgorithms::PQDilithium3 => 9u8,
         };
 
         let keypair = match algorithm_id {
             0u8 => Self::generate_ed25519(),
             1u8 => Self::generate_schnorr(),
             8u8 => Self::generate_falcon(),
+            9u8 => Self::generate_dilithium3(),
             _ => panic!("No Keypair Chosen")
         };
         return keypair
@@ -117,40 +129,60 @@ impl KeyPair {
             pk: pk.as_ref().to_string(),
             alg: alg,
         }
-    }   
-        
-        
-
-}
-
-}
-
-impl SecKey {
-    pub fn generate(alg: KeyAlgorithms) -> Self {
-        let alg_id: u8 = match alg {
+    }
+    pub fn sign<T: AsRef<[u8]>>(&self, bytes: T) -> Signature {
+        let id: u8 = match self.alg {
             KeyAlgorithms::ED25519 => 0u8,
             KeyAlgorithms::Schnorr => 1u8,
-            _ => panic!("No Value")
+            KeyAlgorithms::PQFALCON => 8u8,
+            KeyAlgorithms::PQDilithium3 => 9u8,
         };
 
-        if alg_id == 0 {
-            Self(Self::generate_ed25519().to_string(),KeyAlgorithms::ED25519)
-        }
-        else if alg_id == 1 {
-            Self(Self::generate_schnorr().secret_key(),KeyAlgorithms::Schnorr)
+        if id == 0u8 {
+            let sig = self.sign_ed25519(bytes);
+            return sig
         }
         else {
-            panic!("Nowhere to go.")
+            panic!("No Algorithm Chosen")
+        }
+    }
+    fn sign_ed25519<T: AsRef<[u8]>>(&self, bytes: T) -> Signature {
+        let m = bytes.as_ref();
+        
+        let sk = ED25519SecretKey::from_str(&self.sk);
+        let pk = sk.to_public_key();
+        
+        let sig = sk.sign(m);
+
+        Signature {
+            sig: sig.to_string(),
+            alg: KeyAlgorithms::ED25519,
         }
 
+    }
+    /// Returns the Algorithm Type
+    pub fn algorithm(&self) -> KeyAlgorithms {
+        return self.alg.clone()
+    }
+    /// From Decoded Bytes (Not Hexadecimal or encoded; actual bytes)
+    pub fn from_plain_bytes<T: AsRef<[u8]>>(pk: T, sk: T, ka: KeyAlgorithms) -> Self {
+        Self {
+            pk: hex::encode_upper(pk),
+            sk: hex::encode_upper(sk),
+            alg: ka,
+        }
+    }
+    pub fn from_base58_str<T: AsRef<str>>(sk: T, pk: T, ka: KeyAlgorithms) -> Self {
+        let sk_bytes = sk.as_ref().from_base58().expect("Failed to get from base58");
+        let pk_bytes = pk.as_ref().from_base58().expect("Failed To Get From Base58");
 
-    }
-    fn generate_ed25519() -> ED25519SecretKey {
-        SumatraED25519::new()
-    }
-    fn generate_schnorr() -> SchnorrSecretKey {
-        let (_,sk) = SchnorrPublicKey::generate();
-        return sk
+        let sk_final = hex::encode_upper(sk_bytes);
+        let pk_final = hex::encode_upper(pk_bytes);
+
+        Self {
+            sk: sk_final,
+            pk: pk_final,
+            alg: ka,
+        }
     }
 }
-
