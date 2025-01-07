@@ -1,9 +1,11 @@
 use libsumatracrypt_rs::{pq::signatures::{dilithium::SumatraDilithium3, falcon::SumatraFalcon1024}, signatures::{ed25519::{ED25519SecretKey, SumatraED25519, ED25519PublicKey}, schnorr::{SchnorrSecretKey, SumatraSchnorrAPI}}};
-use crate::internals::crypto::signature::schnorr::*;
+use crate::internals::crypto::{hashing::digest, signature::schnorr::*};
 use crate::internals::crypto::signature::pq::falcon1024::*;
 use crate::internals::encoding::bs32::SlinkyBase32z;
 use base58::*;
 
+use crate::internals::crypto::hashing::blake3;
+use crate::internals::crypto::hashing::shake256;
 
 use crate::internals::serde::{Serialize,Deserialize};
 use zeroize::{Zeroize,ZeroizeOnDrop};
@@ -65,7 +67,16 @@ pub enum KeyAlgorithms {
 }
 
 /// KeySID derived from PublicKey
+#[derive(Clone,Debug,Serialize,Deserialize,Zeroize,ZeroizeOnDrop)]
 pub struct KeySID(String);
+
+impl KeySID {
+    pub fn derive_from_pubkey<T: AsRef<str>>(pk: T) -> Self {
+        let digest: libsumatracrypt_rs::digest::SumatraDigest = blake3::SumatraBlake3::new(pk.as_ref().as_bytes());
+        let sumatra_digest = digest.to_string().to_string();
+        return Self(sumatra_digest)
+    }
+}
 
 impl KeyPair {
     pub fn generate(alg: KeyAlgorithms) -> Self {
@@ -190,5 +201,11 @@ impl KeyPair {
     }
     pub fn import_keypair_yaml<T: AsRef<str>>(keypair_yaml: T) -> Self {
         serde_yaml::from_str(keypair_yaml.as_ref()).expect("Failed To Import Keypair")
+    }
+}
+
+impl PubKey {
+    pub fn from_hex_str<T: AsRef<str>>(s: T, ka: KeyAlgorithms) -> Self {
+        return Self(s.as_ref().to_string(), ka)
     }
 }
