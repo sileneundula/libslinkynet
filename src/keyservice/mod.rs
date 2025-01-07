@@ -1,5 +1,5 @@
 use libsumatracrypt_rs::{pq::signatures::{dilithium::SumatraDilithium3, falcon::SumatraFalcon1024}, signatures::{ed25519::{ED25519SecretKey, SumatraED25519, ED25519PublicKey}, schnorr::{SchnorrSecretKey, SumatraSchnorrAPI}}};
-use crate::internals::crypto::{hashing::digest, signature::schnorr::*};
+use crate::internals::crypto::{signature::schnorr::*};
 use crate::internals::crypto::signature::pq::falcon1024::*;
 use crate::internals::encoding::bs32::SlinkyBase32z;
 use base58::*;
@@ -207,5 +207,8 @@ impl KeyPair {
 impl PubKey {
     pub fn from_hex_str<T: AsRef<str>>(s: T, ka: KeyAlgorithms) -> Self {
         return Self(s.as_ref().to_string(), ka)
+    }
+    pub fn from_plain_bytes<T: AsRef<[u8]>>(bytes: T, ka: KeyAlgorithms) -> Self {
+        return Self(hex::encode_upper(bytes.as_ref()),ka)
     }
 }
