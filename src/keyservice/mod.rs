@@ -171,6 +171,12 @@ impl KeyPair {
         }
 
     }
+    fn sign_schnorr<T: AsRef<[u8]>>(&self, bytes: T) {
+        let m = bytes.as_ref();
+
+        let pk = SchnorrPublicKey::from_hex(&self.pk);
+
+    }
     /// Returns the Algorithm Type
     pub fn algorithm(&self) -> KeyAlgorithms {
         return self.alg.clone()
@@ -202,6 +208,13 @@ impl KeyPair {
     pub fn import_keypair_yaml<T: AsRef<str>>(keypair_yaml: T) -> Self {
         serde_yaml::from_str(keypair_yaml.as_ref()).expect("Failed To Import Keypair")
     }
+    pub fn publickey(&self) -> String {
+        return self.pk.clone()
+    }
+    pub fn secretkey(&self) -> String {
+        return self.sk.clone()
+    }
+
 }
 
 impl PubKey {
@@ -210,5 +223,11 @@ impl PubKey {
     }
     pub fn from_plain_bytes<T: AsRef<[u8]>>(bytes: T, ka: KeyAlgorithms) -> Self {
         return Self(hex::encode_upper(bytes.as_ref()),ka)
+    }
+    pub fn public_key(&self) -> String {
+        return self.0.clone()
+    }
+    pub fn algorithm(&self) -> KeyAlgorithms {
+        return self.1.clone()
     }
 }
