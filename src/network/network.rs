@@ -50,6 +50,9 @@ pub struct SlinkyL1Behaviour {
     pub identify: identify::Behaviour,
 
     pub floodsub: floodsub::Floodsub,
+
+    pub redenzous_client: rendezvous::client::Behaviour,
+    pub rendenzous_server: rendezvous::server::Behaviour,
     // # SlinkyL1
     // Lists the core functionalities
     
@@ -74,6 +77,9 @@ impl SlinkyL1Behaviour {
             identify: identify::Behaviour::new(identify::Config::new(String::from("SlinkyL1Alpha"),kp.public())),
             
             floodsub: Floodsub::new(id),
+            
+            redenzous_client: rendezvous::client::Behaviour::new(kp),
+            rendenzous_server: rendezvous::server::Behaviour::new(rendezvous::server::Config::default()),
         }
     }
 }

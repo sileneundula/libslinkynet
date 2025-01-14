@@ -10,6 +10,7 @@ edition = "2021"
 libp2p = { version = "0.54.1", features = ["full"] }
 tokio = { version = "1.42.0", features = ["full"] }
 futures = "0.3"
+async-trait = "0.1.85"
 
 # Serde
 serde = {version = "1.0.0", features = ["derive"]}
@@ -47,6 +48,7 @@ ring = "0.17.8"
 
 # RAFT
 openraft = "0.9.17"
+openraft-rocksstore = "0.9.17"
 
 # Zeroize
 zeroize = { version= "1.8.1", features=["derive"]}

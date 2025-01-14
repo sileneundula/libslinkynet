@@ -22,3 +22,9 @@ pub mod storageunit;
 
 /// SlinkyL1 Addressing
 pub mod addressing;
+
+/// SlinkyL1 Protocols
+pub mod protocols;
+
+/// Raft Consensus
+pub mod consensus;
